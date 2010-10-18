@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  
+  
+  
+<TextView android:text="SSID_PH" android:id="@+id/wifi_status_ssid_tv" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+<TextView android:text="NETID_PH" android:id="@+id/wifi_status_netid_tv" android:layout_below="@id/wifi_status_ssid_tv" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+<TextView android:text="STRENGTH_PH" android:id="@+id/wifi_status_strength_tv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentTop="true"/>
+</RelativeLayout>
