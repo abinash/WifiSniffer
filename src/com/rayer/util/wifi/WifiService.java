@@ -22,7 +22,7 @@ public class WifiService {
 	
 	public boolean startService(WifiUpdateListener listener) {
 		Log.d("wifisniffer", "startService start");
-
+		mListener = listener;
 		if(mManager.isWifiEnabled() == false) {
 			if(mListener == null)
 				return false;
