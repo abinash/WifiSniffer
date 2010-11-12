@@ -23,6 +23,10 @@ public class WifiSniffer extends Activity implements WifiService.WifiUpdateListe
 
 	
 	private static final int SCAN_RESULT_GET = 0;
+	private static final int SCAN_START = 1;
+	private static final int SCAN_FAILED = 2;
+	private static final int SCAN_INITIALIZING = 3;
+	private static final int REQUEST_WIFI_ON = 4;
 
 	WifiService mService;
 	
@@ -36,6 +40,14 @@ public class WifiSniffer extends Activity implements WifiService.WifiUpdateListe
 				mWifiList_lv.setAdapter(new WifiResultAdapter(resultList));
 				Log.d("wifisniffer", "getting result...");
 				return;
+			}else if (msg.what == SCAN_START) {
+				mStatus_tv.setText("Scanning....");
+			}else if (msg.what == SCAN_FAILED) {
+				mStatus_tv.setText("Scanning failed!");
+			}else if (msg.what == SCAN_INITIALIZING) {
+				mStatus_tv.setText("Initializing scan");
+			}else if (msg.what == REQUEST_WIFI_ON) {
+				mStatus_tv.setText("Turning on WiFi");
 			}
 			super.handleMessage(msg);
 		}
@@ -57,22 +69,20 @@ public class WifiSniffer extends Activity implements WifiService.WifiUpdateListe
         mService = new WifiService(this);
         mRefresh_btn.setOnClickListener(new OnClickListener(){
 
-			@Override
 			public void onClick(View arg0) {
 		        mService.startService(WifiSniffer.this);	
 			}});
     }
     
-	@Override
 	public void OnStartScan() {
-		mStatus_tv.setText("Scanning....");
+		Message msg = mMainHandler.obtainMessage(SCAN_START);
+		mMainHandler.sendMessage(msg);
 	}
-	@Override
 	public boolean OnRequestWifiOn() {
-		// TODO Auto-generated method stub
+		Message msg = mMainHandler.obtainMessage(REQUEST_WIFI_ON);
+		mMainHandler.sendMessage(msg);
 		return true;
 	}
-	@Override
 	public void OnGetScanResult(List<ScanResult> resultList) {
 		Log.d("wifisniffer", "get result message!");
 
@@ -82,13 +92,13 @@ public class WifiSniffer extends Activity implements WifiService.WifiUpdateListe
 		
 		mMainHandler.sendMessage(msg);
 	}
-	@Override
 	public void OnScanFailed() {
-		mStatus_tv.setText("Scanning failed!");
+		Message msg = mMainHandler.obtainMessage(SCAN_FAILED);
+		mMainHandler.sendMessage(msg);
 	}
-	@Override
 	public void OnScanInitializing() {
-		
+		Message msg = mMainHandler.obtainMessage(SCAN_INITIALIZING);
+		mMainHandler.sendMessage(msg);
 	}
 	
 	public class WifiResultAdapter extends BaseAdapter {
@@ -98,25 +108,21 @@ public class WifiSniffer extends Activity implements WifiService.WifiUpdateListe
 			mList = resultList;
 		}
 
-		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return mList.size();
 		}
 
-		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
 			return position;
 		}
 
-		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
 			return position;
 		}
 
-		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			WifiStatusView view = new WifiStatusView(mList.get(position), WifiSniffer.this);
 			return view;
